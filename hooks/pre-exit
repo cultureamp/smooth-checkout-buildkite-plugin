@@ -8,7 +8,11 @@ if [[ "$BUILDKITE_PLUGIN_SMOOTH_CHECKOUT_SKIP_CHECKOUT" == "true" \
 fi
 
 echo "Removing checkout directory: $BUILDKITE_BUILD_CHECKOUT_PATH"
+
 # Only try sudo if deleting without sudo fails
-rm -rf "$BUILDKITE_BUILD_CHECKOUT_PATH" 2>/dev/null \
-  || sudo rm -rf "$BUILDKITE_BUILD_CHECKOUT_PATH"
+[ -z "${BUILDKITE_BUILD_CHECKOUT_PATH:-}" ] || {
+  rm -rf "${BUILDKITE_BUILD_CHECKOUT_PATH:?path_is_not_set}/*" 2>/dev/null || \
+  sudo rm -rf "$BUILDKITE_BUILD_CHECKOUT_PATH"
+}
+
 echo "Cleanup completed successfully."
