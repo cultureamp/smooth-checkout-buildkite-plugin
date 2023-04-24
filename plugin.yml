@@ -30,6 +30,8 @@ configuration:
                   type: string
                 clone_flags:
                   type: string
+                use_sudo:
+                  type: boolean
               additionalProperties: false
             required:
               - url

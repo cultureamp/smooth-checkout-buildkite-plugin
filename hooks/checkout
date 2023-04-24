@@ -8,6 +8,12 @@ if [[ "$BUILDKITE_PLUGIN_SMOOTH_CHECKOUT_SKIP_CHECKOUT" == "true" ]]; then
     exit 0
 fi
 
+if [[ "${BUILDKITE_PLUGIN_SMOOTH_CHECKOUT_USE_SUDO}" == "true" ]]; then
+  SUDO_BIN="sudo"
+else
+  SUDO_BIN=""
+fi
+
 echo "--- :open_file_folder: Setting up workspace"
 echo "Creating directory: $BUILDKITE_BUILD_CHECKOUT_PATH"
 mkdir -p "$BUILDKITE_BUILD_CHECKOUT_PATH" && cd "$BUILDKITE_BUILD_CHECKOUT_PATH"
@@ -63,7 +69,7 @@ setup_git_repo() {
   if [[ -d ".git" ]]; then
     echo "Git repository already exists."
     echo "So, doing a git clean and setting the remote URL"
-    sudo git clean -fdqx && \
+    $SUDO_BIN git clean -fdqx && \
     git remote set-url origin "${REPO_URL}"
     local EXIT_STATUS=$?
   else
